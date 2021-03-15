@@ -12,3 +12,4 @@ if __name__ == '__main__':
     nulls = train.columns[train.isna().any()]
     for i in nulls:
         print(f"In the columns {i}, we have {train[i].isna().sum()} NaN's")
+a
