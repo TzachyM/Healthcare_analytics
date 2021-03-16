@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn import preprocessing
+import matplotlib.pyplot as plt
+
 
 def load_data():
     path = r'C:/Users/tzach/PycharmProjects/Healthcare analytics/healthcare'
@@ -25,11 +27,14 @@ def preprocessing(train, test):
     df.Age = df.Age.map(age_value_dict)
     illness_value_dict = {'Minor': 0, 'Moderate': 1, 'Extreme': 2}
     df['Severity of Illness'] = df['Severity of Illness'].map(illness_value_dict)
-
+    visual(df.iloc[:len(train), :])
+    df = pd.get_dummies(df)
     train_df = df.iloc[:len(train), :].reset_index(drop=True)
     test_df = df.iloc[len(train):, :].reset_index(drop=True)
     test_df.drop(['Stay'], axis=1, inplace=True)
 
+
+    return train_df, test_df
 
 def nan_processing(data, df):
     print(data, ':')
@@ -44,15 +49,15 @@ def nan_processing(data, df):
 def visual(train_df):
     corrmat = train_df.corr()
     sns.heatmap(corrmat, square=True, annot=True)
-    sns.barplot(x='Visitors with Patient', y='Stay', alpha=.7, data=train_df)
+    sns.catplot(x='Visitors with Patient', y='Stay', kind="bar", data=train_df)
 
 
 if __name__ == '__main__':
 
 
     train, test = load_data()
-    preprocessing(train, test)
-    visual(train_df)
+    train_df, test_df = preprocessing(train, test)
+
 
 
     for i in train_df.select_dtypes(exclude=['object']):
